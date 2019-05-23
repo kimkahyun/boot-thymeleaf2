@@ -2,6 +2,7 @@ package iducs.springboot.board.controller;
 
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,7 +27,7 @@ public class HomeController {
 	}
 	@GetMapping("/register")
 	public String regform() {
-		return "user-form";
+		return "regform";
 	}
 	
 	@PostMapping("/users")
@@ -39,16 +40,18 @@ public class HomeController {
 	@GetMapping("/users")
 	public String getAllUser(Model model) {
 		model.addAttribute("users", userRepo.findAll());
-		return "user-list";
+		return "userlist";
 	}	
 	@GetMapping("/users/{id}")
-	public String getUserById(@PathVariable(value = "id") Long userId, Model model)
-			throws ResourceNotFoundException {
-		User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found for this id :: " + userId));
-		model.addAttribute("name", user.getName());
-		model.addAttribute("company", user.getCompany());
-		return "user-info";
-		//return ResponseEntity.ok().body(user);
+	public String getUserById(@PathVariable(value = "id") Long userId,  
+			Model model) throws ResourceNotFoundException {
+				User user = userRepo.findById(userId)
+						.orElseThrow(() -> 
+						new ResourceNotFoundException("not found " + userId ));
+				model.addAttribute("id", "" + userId);
+				model.addAttribute("name", user.getName());
+				model.addAttribute("company", user.getCompany());
+				return "user";
 	}
 	/*
 	@GetMapping("/{fn}")
@@ -60,22 +63,25 @@ public class HomeController {
 	}
 	*/
 	@PutMapping("/users/{id}")
-	public String updateUserById(@PathVariable(value = "id") Long userId, Model model)
-			throws ResourceNotFoundException {
-		User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found for this id :: " + userId));
-		model.addAttribute("name", user.getName());
-		model.addAttribute("company", user.getCompany());
-		return "user";
-		//return ResponseEntity.ok().body(user);
-	}
+	public ResponseEntity<User> updateUserById(@PathVariable(value = "id") Long userId,  
+			@Valid @RequestBody User userDetails, Model model) throws ResourceNotFoundException {
+				User user = userRepo.findById(userId)
+						.orElseThrow(() -> 
+						new ResourceNotFoundException("not found " + userId ));
+				user.setName(userDetails.getName());
+				user.setCompany(userDetails.getCompany());
+				User userUpdate = userRepo.save(user);
+				return ResponseEntity.ok(userUpdate);
+			}
 	@DeleteMapping("/users/{id}")
-	public String deleteUserById(@PathVariable(value = "id") Long userId, Model model)
-			throws ResourceNotFoundException {
-		User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found for this id :: " + userId));
-		model.addAttribute("name", user.getName());
-		model.addAttribute("company", user.getCompany());
-		return "user";
-		//return ResponseEntity.ok().body(user);
-	}
+	public String deleteUserById(@PathVariable(value = "id") Long userId,  
+			Model model) throws ResourceNotFoundException {
+				User user = userRepo.findById(userId)
+						.orElseThrow(() -> 
+						new ResourceNotFoundException("not found " + userId ));
+				userRepo.delete(user); // 객체 삭제 -> jpa : record 삭제로 적용
+				model.addAttribute("name", user.getName());
+				return "disjoin";
+			}	
 
 }
