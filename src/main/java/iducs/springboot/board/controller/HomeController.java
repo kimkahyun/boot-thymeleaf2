@@ -31,7 +31,7 @@ public class HomeController {
 	}
 	
 	@PostMapping("/users")
-	public String createUser(@Valid @RequestBody User user, Model model) {
+	public String createUser(@Valid User user, Model model) {
 		userRepo.save(user);
 		model.addAttribute("user", user);
 		return "redirect:/users";
@@ -48,9 +48,7 @@ public class HomeController {
 				User user = userRepo.findById(userId)
 						.orElseThrow(() -> 
 						new ResourceNotFoundException("not found " + userId ));
-				model.addAttribute("id", "" + userId);
-				model.addAttribute("name", user.getName());
-				model.addAttribute("company", user.getCompany());
+				model.addAttribute("user",user);
 				return "user";
 	}
 	/*
@@ -63,15 +61,16 @@ public class HomeController {
 	}
 	*/
 	@PutMapping("/users/{id}")
-	public ResponseEntity<User> updateUserById(@PathVariable(value = "id") Long userId,  
-			@Valid @RequestBody User userDetails, Model model) throws ResourceNotFoundException {
+	public String updateUserById(@PathVariable(value = "id") Long userId,  
+			@Valid User userDetails, Model model) throws ResourceNotFoundException {
 				User user = userRepo.findById(userId)
 						.orElseThrow(() -> 
 						new ResourceNotFoundException("not found " + userId ));
 				user.setName(userDetails.getName());
 				user.setCompany(userDetails.getCompany());
 				User userUpdate = userRepo.save(user);
-				return ResponseEntity.ok(userUpdate);
+				//model.addAttribute("user",userUpdate);
+				return "redirect:/users";//업데이트 성공시 유저 users에 get방식으로 접근하되 model에 user 어트리뷰트를 전달
 			}
 	@DeleteMapping("/users/{id}")
 	public String deleteUserById(@PathVariable(value = "id") Long userId,  
