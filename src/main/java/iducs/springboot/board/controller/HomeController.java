@@ -1,7 +1,10 @@
 package iducs.springboot.board.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,6 +45,30 @@ public class HomeController {
 		model.addAttribute("users", userRepo.findAll());
 		return "userlist";
 	}	
+	@GetMapping("/users/byname")//byname?name="aaaa"
+	public String getUsersByName(@Param(value="name")String name, Model model) {
+		List<User> users = userRepo.findByName(name);
+		model.addAttribute("users", users);
+		return "userlist";
+	}
+	@GetMapping("/users/nameasc")
+	public String getUsersByNameAsc(@Param(value="name")String name, Model model) {
+		List<User> users = userRepo.findByNameOrderByIdAsc(name);
+		model.addAttribute("users", users);
+		return "userlist";
+	}
+	@GetMapping("/users/bycom")//byname?name="aaaa"
+	public String getUsersByCompany(@Param(value="company")String company, Model model) {
+		List<User> users = userRepo.findByCompany(company);
+		model.addAttribute("users", users);
+		return "userlist";
+	}
+	@GetMapping("/users/comasc")
+	public String getUsersByCompanyAsc(@Param(value="company")String company, Model model) {
+		List<User> users = userRepo.findByCompanyOrderByIdAsc(company);
+		model.addAttribute("users", users);
+		return "userlist";
+	}
 	@GetMapping("/users/{id}")
 	public String getUserById(@PathVariable(value = "id") Long userId,  
 			Model model) throws ResourceNotFoundException {
@@ -51,6 +78,7 @@ public class HomeController {
 				model.addAttribute("user",user);
 				return "user";
 	}
+	
 	/*
 	@GetMapping("/{fn}")
 	public String getEmployeeByFirstName(@PathVariable(value = "fn") String firstName)
