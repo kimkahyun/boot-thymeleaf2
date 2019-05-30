@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>사용자 정보 조회</title>
+    <th:block th:include="fragments/header"></th:block>
+    <!-- 웹브라우저에 내장된 html 인터프리터에게 무시
+ 	<script type="text/javascript" src="/js/main.js"></script>
+	-->
+</head>
+<body>
+<th:block th:include="fragments/nav"></th:block>
+
+
+<div class="container" style="min-height: 500px">
+
+    <div class="starter-template">
+        <h1><span th:text="${name}"></span>
+        님이 요청한 회원 탈퇴가 정상적으로 처리되었습니다.
+        </h1><br/>
+        <a href="./regform">회원 등록 </a>
+        <a href="./products">상품 등록 </a>
+    </div>
+
+</div>
+
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+  
+<script type="text/javascript" src="js/main.js"></script>
+<th:block th:include="fragments/footer"></th:block>
+</body>
+</html>
+

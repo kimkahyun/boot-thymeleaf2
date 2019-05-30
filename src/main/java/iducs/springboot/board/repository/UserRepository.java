@@ -6,6 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import iducs.springboot.board.domain.User;
 
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import iducs.springboot.board.domain.User;
+
 public interface UserRepository 
 	extends JpaRepository<User, Long> {
 	List<User> findByName(String name);
